@@ -1,0 +1,50 @@
+﻿@model IEnumerable<WebApp.Models.Survey>
+
+@{
+    ViewBag.Title = "Survey Overview";
+}
+
+<h2>Survey Overview</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayName("Survey Title")
+        </th>
+        <th>
+            @Html.DisplayName("Creation Date")
+        </th>
+        <th>
+            @Html.DisplayName("Closing Date")
+        </th>
+        <th>
+            Actions
+        </th>
+    </tr>
+
+    @if(Model != null)
+    {
+        foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SurveyTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ClosingDate)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.SurveyId }) |
+                @Html.ActionLink("Details", "Details", new { id = item.SurveyId }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.SurveyId })
+            </td>
+        </tr>
+        }
+    }
+</table>

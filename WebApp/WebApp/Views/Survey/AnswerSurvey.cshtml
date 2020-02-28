@@ -1,0 +1,81 @@
+﻿@model WebApp.Models.SurveySurveyQuestionSurveyAnswer
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool surveyActive = false;
+    bool hasQuestions = Model.SurveyQuestions != null;
+    if (Model.Survey != null)
+    {
+        surveyActive = Model.Survey.IsActive();
+    }
+
+    int minimumAnswer = WebApp.Models.HelperClass.Settings.MinimumAnswer;
+    int maximumAnswer = WebApp.Models.HelperClass.Settings.MaximumAnswer;
+    int defaultAnswer = WebApp.Models.HelperClass.Settings.DefaultAnswer;
+}
+
+@using WebApp.Models
+
+@if (Model.Survey != null)
+{
+    <h2>@Model.Survey.SurveyTitle</h2>
+}
+else
+{
+    <h2>Opps, that survey does not exist!</h2>
+}
+
+@if (surveyActive == false)
+{
+    <h4>Survey is no longer active!</h4>
+}
+
+
+@using (Html.BeginForm("FinishSurvey", "Survey", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @if (hasQuestions)
+        {
+            <h4>Survey Questions</h4>
+            <hr />
+            for (int i = 0; i < Model.SurveyQuestions.Count; i++)
+            {
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        @Html.EditorFor(sa => sa.SurveyAnswers[i].SurveyQuestionId, new { htmlAttributes = new { @class = "form-control", @Value = Model.SurveyQuestions[i].SurveyQuestionId, @type = "hidden" } })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label(Model.SurveyQuestions[i].Question, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(sa => sa.SurveyAnswers[i].Answer, new { htmlAttributes = new { @class = "form-control", type = "range", min = minimumAnswer, max = maximumAnswer, oninput = "amount" + i + ".value=this.value", @Value = defaultAnswer } })
+                        @Html.TextBoxFor(sa => sa.SurveyAnswers[i].SurveyQuestionId, new { @class = "form-control", @readonly = true, @id = "amount" + i, @Value = defaultAnswer, disabled = "disabled" })
+                        @Html.ValidationMessageFor(sa => sa.SurveyAnswers[i].Answer, "", new { @class = "text-danger", type = "range", min = minimumAnswer, max = maximumAnswer })
+                    </div>
+                </div>
+
+            }
+        }
+        else
+        {
+            <h4>This survey has no questions!</h4>
+        }
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                @if (surveyActive && hasQuestions)
+                {
+                    <input type="submit" value="Submit" class="btn btn-default" />
+                }
+                else
+                {
+                    <input type="submit" value="Submit" class="btn btn-default" disabled />
+                }
+            </div>
+        </div>
+    </div>
+}

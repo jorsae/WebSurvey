@@ -1,0 +1,57 @@
+﻿@model WebApp.Models.Survey
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Survey</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayName("Survey Title")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SurveyTitle)
+        </dd>
+
+        <dt>
+            Answer Survey url
+        </dt>
+
+        <dd>
+            <a href="@ViewBag.AnswerSurveyUrl">@ViewBag.AnswerSurveyUrl</a>
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Creation Date")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreationDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayName("Closing Date")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ClosingDate)
+        </dd>
+
+        <dd>
+            <h2>Survey stats</h2>
+            @Html.Raw(ViewBag.surveyQuestionStats)
+        </dd>
+    </dl>
+</div>
+<p>
+    @if(Model != null)
+    {
+        Html.ActionLink("Edit", "Edit", new { id = Model.SurveyId });
+    }
+    @Html.ActionLink("Back to List", "Index")
+</p>
